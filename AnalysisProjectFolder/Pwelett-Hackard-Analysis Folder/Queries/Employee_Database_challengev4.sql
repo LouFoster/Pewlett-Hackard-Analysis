@@ -161,6 +161,7 @@ FROM employees AS em
 	(em.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
 ORDER BY "emp_no";
 
+-- Deliverable 3 
 SELECT COUNT(emp_no), 
 	   EXTRACT(YEAR FROM birth_date) AS birth_year
 FROM retiring_years
