@@ -61,7 +61,10 @@ SELECT * FROM retiring_titles
 ORDER BY count DESC
 
 --Deliverable 2 - The Employees Eligible for the Mentorship Program
--- Create Department Employees table
+-- create a Mentorship Eligibility table that holds the employees
+-- who are eligible to participate in a mentorship program
+--create a Mentorship Eligibility table that holds the employees 
+--who are eligible to participate in a mentorship program
 CREATE TABLE dept_emp (
 	 emp_no INT NOT NULL,
      dept_no VARCHAR(4) NOT NULL,
@@ -134,3 +137,45 @@ WHERE eligible_employees.birth_date BETWEEN ('1965-01-01') AND ('1965-12-31')
 ORDER BY eligible_titles.emp_no ASC, eligible_employees.birth_date DESC; 
 
 SELECT * FROM membership_eligibility;
+
+
+
+
+
+--
+-- Deliverable 3. Summsary. Additional query. Retiring_years
+SELECT DISTINCT ON (em.emp_no) em.emp_no AS "emp_no", 
+					em.first_name, 
+					em.last_name, 
+					em.birth_date,
+					de.from_date, 
+					de.to_date, 
+					ti.title
+INTO retiring_years
+FROM employees AS em
+	INNER JOIN dept_emp AS de 
+		ON (em.emp_no = de.emp_no)
+	INNER JOIN titles AS ti 
+		ON (em.emp_no = ti.emp_no)
+	WHERE de.to_date = ('9999-01-01') AND
+	(em.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
+ORDER BY "emp_no";
+
+SELECT COUNT(emp_no), 
+	   EXTRACT(YEAR FROM birth_date) AS birth_year
+FROM retiring_years
+GROUP BY birth_year
+ORDER BY birth_year ASC;
+
+-- Deliverable 3. Summary. Additional query 2. Mentorship_eligibilty_dept
+SELECT count(title),
+		d.dept_name
+INTO membership_eligibility_dept
+FROM membership_eligibility AS me
+	INNER JOIN dept_emp AS de ON (me.emp_no = de.emp_no)
+	INNER JOIN departments AS d ON (d.dept_no = de.dept_no)
+GROUP BY d.dept_name
+
+SELECT * FROM membership_eligibility_dept
+
+
